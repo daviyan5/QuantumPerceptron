@@ -52,7 +52,7 @@ def save_data_ararys(train_set_x, train_set_y, test_set_x, test_set_y):
     np.save("./params/test_set_y.npy", test_set_y)
 
 def load_data(reload_data = False):
-    if(os.path.isfile("./params/train_set_x.npy") and not reload_data):
+    if(reload_data is False):
         return load_data_arrays()
         
     dataset_train = foz.load_zoo_dataset(
