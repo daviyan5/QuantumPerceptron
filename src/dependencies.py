@@ -16,8 +16,9 @@ from math import *
 sim = Aer.get_backend('aer_simulator')
 sim.set_options(device = 'GPU')
 
-def phase_normalize(alfa,a):
-  return alfa/a * (pi/2)
 
-def phase_denormalize(norm,a):
-  return norm * a/ (pi/2)
+def phase_normalize(alfa,mn,mx):
+  return ((alfa - mn) / (mx - mn))  * (pi/2)
+
+def phase_denormalize(norm,mn,mx):
+  return ((norm * (mx - mn)) / (pi/2)) + mn

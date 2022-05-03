@@ -3,18 +3,18 @@ from qcircuit import *
 from train import save_model
 import time
 # tem que estar normalizado
+
 def get_activation(w,train_set_x,num_shots = 8192):
     m = len(train_set_x[0])
     n = ceil(log2(m))
     A = np.array([])
-    start = time.time()
-    for pos,train_input in enumerate(train_set_x):
-        model = PerceptronCircuit(train_input, w, n)
+    w_sent = phase_normalize(w, np.min(w), np.max(w))
+    train_set_x_sent = phase_normalize(train_set_x, 0, 255)
+    for pos,train_input in enumerate(train_set_x_sent):
+        model = PerceptronCircuit(train_input, w_sent, n)
         qobj = assemble(model)   
         counts = sim.run(qobj,shots = num_shots).result().get_counts()
-        end = time.time()
-        print("Total Simulation Time for {} - {} (s)".format(pos,end-start))
-        start = end
+    
         if "1" in counts:
             A = np.append(A,counts["1"]/ num_shots)
         else:
@@ -22,22 +22,28 @@ def get_activation(w,train_set_x,num_shots = 8192):
     return A
 
 def get_dJ(w):
-    u = train_set_x - w     # theta - phi
+    phi = phase_normalize(w, np.min(w), np.max(w))
+    theta = phase_normalize(train_set_x, 0, 255)
+    set_size = train_set_x.shape[0]
+    u = theta - phi         # theta - phi
     c = np.cos(u)           # cos(theta - phi)
-    C = c.sum(axis = 1).reshape(1,m).T
+    C = c.sum(axis = 1).reshape(1,set_size).T
     s = np.sin(u)
-    S = s.sum(axis = 1).reshape(1,m).T
+    S = s.sum(axis = 1).reshape(1,set_size).T
     A = (C * C + S * S) / 2**(2 * n)
     return (2 * (s*C - c*S) / 2**(2 * n)) * A/set_size
 
 
 
 def get_A(w,train_set_x,n):## Função exata de A
-    u = train_set_x - w     # theta - phi
-    c = np.cos(u)           # cos(theta - phi)
-    C = c.sum(axis = 1).reshape(1,m).T
+    phi = phase_normalize(w, np.min(w), np.max(w))
+    theta = phase_normalize(train_set_x, 0, 255)
+    set_size = train_set_x.shape[0]
+    u = theta - phi     
+    c = np.cos(u)         
+    C = c.sum(axis = 1).reshape(1,set_size).T
     s = np.sin(u)
-    S = s.sum(axis = 1).reshape(1,m).T
+    S = s.sum(axis = 1).reshape(1,set_size).T
     return (C * C + S * S) / 2**(2 * n)
 
 
@@ -56,10 +62,10 @@ def powerseries_f(eta=0.01, power=2, offset=0):
         k += 1
 
 def learning_rate_f():
-    return powerseries_f(31.53679508386088, 0.602, 0)
+    return powerseries_f(50.860244892404292, 0.602, 0)
 
 def perturbation_f():
-    return powerseries_f(0.2,  0.101)
+    return powerseries_f(0.1,  0.101)
 
 def optimize(w,train_x,train_y, Hyperparameters):
     global train_set_x_gb

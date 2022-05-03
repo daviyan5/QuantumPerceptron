@@ -1313,3 +1313,13 @@ docs/tests_data/quantum_cost.jpg
 docs/tests_data/train_cost.jpg
 docs/tests_data/training_output_scraped.txt
 docs/tests_data/scrape_costs.py
+notebook/Activation_Differences.jpg
+notebook/loss_curve_adam_65.jpg
+src/data/train/data/GATO/00945359c820a275.jpg
+src/params/acc.npy
+src/params/test_set_x.npy
+src/params/train_set_x.npy
+src/params/test_set_y.npy
+src/params/train_set_y.npy
+src/params/w_num.npy
+src/params/w.npy
