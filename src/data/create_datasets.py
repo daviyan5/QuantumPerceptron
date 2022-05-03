@@ -2,18 +2,24 @@ import fiftyone as fo
 import fiftyone.zoo as foz
 
 
-dataset_train = foz.load_zoo_dataset(
-    "open-images-v6",
-    split = "train",
-    label_types = ["classifications"],
-    classes = ["Cat"],
-    max_samples = 500,
+dataset = foz.load_zoo_dataset(
+    "open-images-v6", 
+    split="validation", 
+    label_types=["detections", "classifications"], 
+    classes=["Cat"],
+    max_samples=500,
+    seed=51,
+    shuffle=True,
+    dataset_name="open-images-cat-dog",
 )
-dataset_test = foz.load_zoo_dataset(
-    "open-images-v6",
-    split = "test",
-    label_types = ["classifications"],
-    classes = ["Cat"],
-    max_samples = 500,
+
+dog_subset = foz.load_zoo_dataset(
+    "open-images-v6", 
+    split="validation", 
+    label_types=["detections", "classifications"], 
+    classes=["Dog"],
+    max_samples=500,
+    seed=51,
+    shuffle=True,
+    dataset_name="dog-subset",
 )
-session = fo.launch_app(dataset_train)
