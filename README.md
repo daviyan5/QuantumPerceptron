@@ -6,6 +6,8 @@ Uma implementação do Perceptron Linear utilizando circuitos quânticos.
 
 #### Dependências
 _Python 3_ é requisitado para a execução.
+As bibliotecas _Qiskit_ e _Numpy_ são necessárias.
+Uma GPU com _CUDA_ é altamente recomendada.
 
 #### Execução
 O treinamento do modelo pode ser efetuado por:
